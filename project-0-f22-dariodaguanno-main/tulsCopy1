@@ -1,0 +1,71 @@
+//
+// Created by Dario Daguanno on 8/24/2022.
+//tuls.c will take 0 directory paths, 1 directory path or multiple directory paths and print the files
+//in that directory path. if 0 paths are given, it will print the files in the current directory.
+//If there is a directory in the given directory, it will recursively print the child directory files
+//How to distinguish between file and directory*****
+//INODE(7) man states: "to test for a regular file... one could write
+//stat(pathname, &sb);
+//if((sb.st_mode & S_IFMT) == S_IFREG){
+//  *handle the file*
+//}
+
+
+//Eventually we will print out using dir->d_name from the dirent struct
+
+#define _GNU_SOURCE
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+//Adding important libraries
+
+
+//dirent man shows I should prob use this: DIR *opendir(const char *);
+
+void recursive_dir(int indent, char *pathName);//prototype for the recursive
+
+int main(int argc/*argument count*/, char**argv/*array of the whole argument*/) {
+
+    DIR *d;//declare directory stream
+    struct dirent **dir;
+
+    //printf("1st arg is %s\n2nd arg is %s\n", argv[0], argv[1]);
+
+    int numberOfDir;
+
+
+    if(argc==1){
+        d = opendir(".");
+        numberOfDir = scandir(".", &dir, NULL, alphasort);
+        if(numberOfDir == -1){
+            printf("tuls: cannot scan directory\n");
+            exit(1);
+        }
+        else{
+            printf("Number of directories: %d\n", numberOfDir);
+            while(numberOfDir--){
+                printf("%s", dir[numberOfDir]->d_name);
+                stat(".", &dir);
+                if((dir.st_mode)){
+
+                }
+            }
+        }
+    }
+    else if(argc==2){
+        //d = opendir(argv[1]);
+        printf("2 args\n");
+    }
+    else{
+        for(int i=1; i<sizeof(argv); i++){
+            //d = opendir(argv[i]);
+            printf("%d args\n", i);
+        }
+    }
+    return 0;
+}
